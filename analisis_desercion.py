@@ -41,7 +41,12 @@ def explorar(df):
     Pregunta: ¿alguna columna numérica aparece como texto? ¿Por qué crees que pasa?
     """
     # TODO 1: imprimir shape, info(), describe() y value_counts() de las columnas indicadas.
-    pass
+    print("Forma del dataset:", df.shape)
+    df.info()
+    print(df.describe())
+    for col in ["programa", "jornada", "genero", "estado"]:
+        print(f"\n--- {col} ---")
+        print(df[col].value_counts())
 
 
 def auditar(df):
