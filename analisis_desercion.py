@@ -283,6 +283,25 @@ def eliminar_duplicados(df):
     Pista: duplicated() y drop_duplicates(), con reset_index(drop=True).
     """
     # TODO 6: eliminar duplicados, registrar la decisión y devolver el dataframe.
+    seccion("6. Eliminar duplicados")
+
+    filas_antes = len(df)
+    duplicados = df.duplicated().sum()
+    ids_repetidos = df["id_estudiante"].duplicated().sum()
+
+    df = df.drop_duplicates().reset_index(drop=True)
+
+    registrar("eliminar_duplicados", "todas", "eliminar filas duplicadas", duplicados,
+              "Son filas idénticas en todas las columnas, incluido id_estudiante: es el mismo "
+              "estudiante registrado dos veces. Dejarlas lo contaría doble en las tasas.")
+
+    bloque("Resultado",
+           f"<p>Filas antes: {filas_antes}<br>"
+           f"Filas duplicadas eliminadas: {duplicados}<br>"
+           f"Filas después: {len(df)}<br>"
+           f"id_estudiante repetidos antes de eliminar: {ids_repetidos}<br>"
+           f"id_estudiante repetidos después de eliminar: {df['id_estudiante'].duplicated().sum()}</p>")
+
     return df
 
 #---------------------------------------------------------------
