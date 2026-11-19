@@ -56,9 +56,11 @@ def registrar(paso, columna, accion, filas, justificacion):
         "filas_afectadas": int(filas), "justificacion": justificacion,
     })
 
-
+#---------------------------------------------------------------
+#UNO - HECHO
+#---------------------------------------------------------------
 def explorar(df):
-    """Paso 1 del Word: primera mirada al dataset.
+    """PASO 1 del Word: primera mirada al dataset.
 
     Muestra la forma, los tipos y los nulos de cada columna, las estadísticas
     numéricas, y los valores de las columnas programa, jornada, genero y estado.
@@ -78,20 +80,62 @@ def explorar(df):
     for col in ["programa", "jornada", "genero", "estado"]:
         bloque(f"value_counts() de {col}", df[col].value_counts().to_frame().to_html())
 
+#---------------------------------------------------------------
+#DOS - HECHO
+#---------------------------------------------------------------
 
 def auditar(df):
-    """Paso 2 del Word: buscar problemas sin corregirlos todavía.
+    """PASO 2 del Word: buscar problemas sin corregirlos todavía.
 
     Revisa: nulos reales, faltantes disfrazados ('-', 999), valores imposibles
     (edad, promedio, horas), duplicados y formatos de fecha.
     Pregunta: ¿cuál de estos problemas afecta más el análisis? ¿Por qué?
     """
     # TODO 2: imprimir cada uno de los conteos de problemas.
-    pass
+    seccion("2. Auditar")
 
+    # 1. Nulos reales: celdas vacías, por columna
+    nulos = df.isnull().sum()
+    nulos = nulos[nulos > 0]  # solo las columnas que tienen nulos
+    bloque("Nulos reales", nulos.to_frame("nulos").to_html())
+
+    # 2. Faltantes disfrazados: valores que significan "sin dato"
+    guiones_asist = (df["asistencia_pct"] == "-").sum()
+    guiones_horas = (df["horas_trabajo_semana"] == "-").sum()
+    dist_999 = (df["distancia_km"] == 999).sum()
+    bloque("Faltantes disfrazados",
+           f"<p>Guiones en asistencia_pct: {guiones_asist}<br>"
+           f"Guiones en horas_trabajo_semana: {guiones_horas}<br>"
+           f"Valores 999 en distancia_km: {dist_999}</p>")
+
+    # 3. Formato inconsistente: números con símbolo %
+    con_porcentaje = df["asistencia_pct"].str.contains("%", regex=False).sum()
+    bloque("Símbolo % en asistencia_pct", f"<p>{con_porcentaje} celdas</p>")
+
+    # 4. Valores imposibles
+    edad_mal = ((df["edad"] < 15) | (df["edad"] > 60)).sum()
+    prom_mal = (df["promedio_acumulado"] > 5).sum()
+    horas = pd.to_numeric(df["horas_trabajo_semana"], errors="coerce")  # copia temporal, no cambia df
+    horas_mal = (horas > 100).sum()
+    bloque("Valores imposibles",
+           f"<p>Edades fuera de 15 a 60 años: {edad_mal}<br>"
+           f"Promedios mayores a 5: {prom_mal}<br>"
+           f"Horas de trabajo mayores a 100 por semana: {horas_mal}</p>")
+
+    # 5. Duplicados: filas idénticas en todas las columnas
+    duplicados = df.duplicated().sum()
+    bloque("Filas duplicadas", f"<p>{duplicados} filas</p>")
+
+    # 6. Fechas en formato DD/MM/AAAA (las que tienen '/')
+    fechas_dd = df["fecha_matricula"].str.contains("/", regex=False).sum()
+    bloque("Fechas en formato DD/MM/AAAA", f"<p>{fechas_dd} de {len(df)} fechas</p>")
+
+#---------------------------------------------------------------
+#TRES
+#---------------------------------------------------------------
 
 def convertir_numericos(df):
-    """Paso 3 del Word: columnas que deberían ser numéricas, pero llegan como texto.
+    """PASO 3 del Word: columnas que deberían ser numéricas, pero llegan como texto.
 
     Pistas: quitar el símbolo % con str.replace; reemplazar '-' por nulo;
     convertir con pd.to_numeric(..., errors="coerce"); reemplazar 999 por nulo en distancia_km.
@@ -100,9 +144,12 @@ def convertir_numericos(df):
     # TODO 3: convertir asistencia_pct, horas_trabajo_semana y distancia_km a número.
     return df
 
+#---------------------------------------------------------------
+#CUATRO
+#---------------------------------------------------------------
 
 def unificar_categorias(df):
-    """Paso 4 del Word: errores tipográficos en columnas categóricas.
+    """PASO 4 del Word: errores tipográficos en columnas categóricas.
 
     Pistas: primero df[col].str.strip().str.lower(); después .replace(diccionario)
     con las variantes que encontraste con value_counts(). Los valores correctos están en VALIDOS.
@@ -112,8 +159,12 @@ def unificar_categorias(df):
     return df
 
 
+#---------------------------------------------------------------
+#CINCO
+#---------------------------------------------------------------
+
 def convertir_fechas(df):
-    """Paso 5 del Word: fechas escritas en dos formatos.
+    """PASO 5 del Word: fechas escritas en dos formatos.
 
     Pista: intenta el formato AAAA-MM-DD y luego DD/MM/AAAA, cada uno con errors="coerce",
     y junta los resultados con fillna(). Registra cuántas fechas tenían el segundo formato.
@@ -121,9 +172,12 @@ def convertir_fechas(df):
     # TODO 5: convertir fecha_matricula a fecha con los dos formatos.
     return df
 
+#---------------------------------------------------------------
+#SEIS
+#---------------------------------------------------------------
 
 def eliminar_duplicados(df):
-    """Paso 6 del Word: filas repetidas.
+    """PASO 6 del Word: filas repetidas.
 
     Pregunta: ¿podrían existir dos estudiantes distintos con todos los datos iguales?
     Pista: duplicated() y drop_duplicates(), con reset_index(drop=True).
@@ -131,9 +185,12 @@ def eliminar_duplicados(df):
     # TODO 6: eliminar duplicados, registrar la decisión y devolver el dataframe.
     return df
 
+#---------------------------------------------------------------
+#SIETE
+#---------------------------------------------------------------
 
 def tratar_faltantes(df):
-    """Paso 7 del Word: decidir qué hacer con los nulos reales.
+    """PASO 7 del Word: decidir qué hacer con los nulos reales.
 
     Preguntas:
     - ¿Puedes inventar una nota? ¿Qué pasa si imputas el promedio?
@@ -144,8 +201,12 @@ def tratar_faltantes(df):
     return df
 
 
+#---------------------------------------------------------------
+#OCHO
+#---------------------------------------------------------------
+
 def tratar_imposibles(df):
-    """Paso 8 del Word: valores que no pueden existir.
+    """PASO 8 del Word: valores que no pueden existir.
 
     Preguntas:
     - La escala del promedio es de 0 a 5. ¿Qué harías con un 45?
@@ -155,9 +216,12 @@ def tratar_imposibles(df):
     # TODO 8: tratar edad, promedio_acumulado y horas_trabajo_semana, con sus justificaciones.
     return df
 
+#---------------------------------------------------------------
+#NUEVE
+#---------------------------------------------------------------
 
 def crear_variables(df):
-    """Paso 9 del Word: variables nuevas para el análisis.
+    """PASO 9 del Word: variables nuevas para el análisis.
 
     Crea:
     - desertor: True si estado es 'desertor', False si no.
@@ -203,9 +267,13 @@ def grafico_tasa_asistencia(df):
     # TODO 13: dibujar la tasa por cuartil, guardar en GRAFICOS / "tasa_desercion_por_asistencia.png" y mostrar.
     pass
 
+#---------------------------------------------------------------
+#DIEZ
+#---------------------------------------------------------------
+
 
 def responder_preguntas(df):
-    """Paso 10 del Word: las cinco preguntas de la institución.
+    """PASO 10 del Word: las cinco preguntas de la institución.
 
     Cada pregunta debe imprimir el resultado con el número de estudiantes por grupo.
     Pregunta 1: ¿Qué programa presenta la tasa de deserción más alta?
@@ -219,9 +287,12 @@ def responder_preguntas(df):
     # TODO 14: responder las cinco preguntas con groupby() y agg().
     pass
 
+#---------------------------------------------------------------
+#ONCE
+#---------------------------------------------------------------
 
 def guardar(df):
-    """Paso 11 del Word: guardar el dataset limpio y la tabla de decisiones. Ya está escrito."""
+    """PASO 11 del Word: guardar el dataset limpio y la tabla de decisiones. Ya está escrito."""
     PROCESSED.mkdir(parents=True, exist_ok=True)
     df.to_csv(PROCESSED / "dataset_limpio.csv", index=False)
     pd.DataFrame(DECISIONES).to_csv(PROCESSED / "decisiones.csv", index=False)
@@ -257,3 +328,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#open Data/processed/reporte.html
