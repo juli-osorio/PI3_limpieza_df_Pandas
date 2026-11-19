@@ -200,15 +200,15 @@ Sí:
 En el cuartil de menor asistencia deserta 6 de cada 10 estudiantes; en el de mayor asistencia, menos de 1 de cada 10.
 
 ### 4. Reflexión: asociación y causalidad
-<!-- - Es posible que los becados deserten menos porque la beca los retiene, sin embargo es una asociación y puede que allí no esté la causa de la retención. Abría que ver más factores, como si trabaja, la situación ecónomica. -->
-<!-- - Faltar a clase puede ser la causa de la deserción, pero también puede ser un efecto. -->
-<!-- - Quizas se puedan sacar mejores conclusiones aislando los grupos por personas que trabajan o por situación económica para obtener la causa de la deserción. -->
+- Es posible que los becados deserten menos porque la beca los retiene, sin embargo es una asociación y puede que allí no esté la causa de la retención. Abría que ver más factores, como si trabaja, la situación ecónomica. -->
+- Faltar a clase puede ser la causa de la deserción, pero también puede ser un efecto. -->
+- Quizas se puedan sacar mejores conclusiones aislando los grupos por personas que trabajan o por situación económica para obtener la causa de la deserción.
 
 ### 5. Reflexión: `motivo_retiro` y la predicción
 
-<!-- el motivo_retiro no funciona para predecir pq solo se llena despues de que el estudiante se va y con un estudiante activo la columna está vacía. Donde sí sirve es para entender por qué se fueron los que ya se fueron, y con eso diseñar estrategias para que los demás se queden. -->
+el motivo_retiro no funciona para predecir pq solo se llena despues de que el estudiante se va y con un estudiante activo la columna está vacía. Donde sí sirve es para entender por qué se fueron los que ya se fueron, y con eso diseñar estrategias para que los demás se queden.
 
 ### 6. Reflexión: uso de variables sensibles
 
-<!-- Las columnas como genero, estrato, edad, ciudad_procedencia y tipo_colegio son datos personales, por lo que hay que tratarlos con cuidado, no cualquiera puede tener acceso a ellos. Estos dicen quién es el estudiante, no lo que hace. Si la institución decide con ellas, puede terminar discriminando y negándole cupos o becas a un grupo solo por de dónde viene y no por su trayectoria: asistencia y rendimiento en las materias. -->
+Las columnas como genero, estrato, edad, ciudad_procedencia y tipo_colegio son datos personales, por lo que hay que tratarlos con cuidado, no cualquiera puede tener acceso a ellos. Estos dicen quién es el estudiante, no lo que hace. Si la institución decide con ellas, puede terminar discriminando y negándole cupos o becas a un grupo solo por de dónde viene y no por su trayectoria: asistencia y rendimiento en las materias.
 
