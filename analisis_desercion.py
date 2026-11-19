@@ -590,7 +590,7 @@ def responder_preguntas(df):
            f"<p><strong>Respuesta:</strong> becados {p2.loc['sí', 'tasa']:.1%} "
            f"({p2.loc['sí', 'estudiantes']} estudiantes) frente a no becados "
            f"{p2.loc['no', 'tasa']:.1%} ({p2.loc['no', 'estudiantes']} estudiantes). "
-           f"Es una asociación, no prueba que la beca cause la permanencia.</p>")
+           f"Es una posible causa de que la beca aumente la permanencia pero no se puede afirmar por completo.</p>")
 
     # --- Pregunta 3: promedio acumulado por jornada ---
     p3 = (df.groupby("jornada")
@@ -623,8 +623,8 @@ def responder_preguntas(df):
     bloque("Pregunta 5: ¿La deserción aumenta conforme baja la asistencia?",
            p5.round(3).to_html() +
            f"<p><strong>Respuesta:</strong> sí. La tasa pasa de {p5['tasa'].iloc[-1]:.1%} en el cuartil "
-           f"de asistencia más alta a {p5['tasa'].iloc[0]:.1%} en el más bajo. Es una asociación: "
-           f"la baja asistencia puede ser una señal de alerta, no necesariamente la causa.</p>")
+           f"de asistencia más alta a {p5['tasa'].iloc[0]:.1%} en el más bajo. "
+           f"la baja asistencia puede ser una señal de alerta.</p>")
 
 #---------------------------------------------------------------
 #ONCE - listo
@@ -669,4 +669,8 @@ if __name__ == "__main__":
     main()
 
 
-#open Data/processed/reporte.html
+# open Data/processed/reporte.html
+
+# activar ambiente: 
+ # source venv/bin/activate
+ # python analisis_desercion.py

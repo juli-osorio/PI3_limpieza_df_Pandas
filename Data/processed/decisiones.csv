@@ -1,0 +1,19 @@
+paso,columna,accion,filas_afectadas,justificacion
+convertir_numericos,asistencia_pct,quitar símbolo %,300,El % es solo formato peroo el número es el mismo y se necesita como número para calcular.
+convertir_numericos,asistencia_pct,guion '-' a nulo,202,El guion significa 'sin dato' --> nulo real para que pandas lo reconozca.
+convertir_numericos,horas_trabajo_semana,guion '-' a nulo,2822,El guion significa 'sin dato' --> nulo real para que pandas lo reconozca.
+convertir_numericos,distancia_km,999 a nulo,152,"999 es un código de 'sin dato', no una distancia real; dejarlo inflaría el promedio."
+unificar_categorias,programa,unificar escritura,260,"Eran el mismo valor escrito distinto (mayúsculas, tildes o abreviaturas); sin unificar, un mismo grupo se contaría como varios."
+unificar_categorias,jornada,unificar escritura,485,"Eran el mismo valor escrito distinto (mayúsculas, tildes o abreviaturas); sin unificar, un mismo grupo se contaría como varios."
+unificar_categorias,genero,unificar escritura,559,"Eran el mismo valor escrito distinto (mayúsculas, tildes o abreviaturas); sin unificar, un mismo grupo se contaría como varios."
+unificar_categorias,ciudad_procedencia,unificar escritura,542,"Eran el mismo valor escrito distinto (mayúsculas, tildes o abreviaturas); sin unificar, un mismo grupo se contaría como varios."
+convertir_fechas,fecha_matricula,convertir DD/MM/AAAA a fecha,3052,"La misma columna tenía dos formatos; con formato explícito no se confunden día y mes, y la columna queda como fecha para poder calcular con ella."
+eliminar_duplicados,todas,eliminar filas duplicadas,150,"Son filas idénticas en todas las columnas, incluido id_estudiante: es el mismo estudiante registrado dos veces. Dejarlas lo contaría doble en las tasas."
+tratar_faltantes,promedio_acumulado,eliminar filas,298,"Una nota no se puede inventar. Imputar el promedio pondría a todos en la media y escondería justo a los estudiantes con bajo rendimiento, que importan para la deserción."
+tratar_faltantes,ciudad_procedencia,reemplazar nulo por 'Sin dato',96,"Es un dato descriptivo: eliminar la fila perdería sus demás datos, e inventar una ciudad o colegio sería falso. 'Sin dato' conserva la fila y es honesto."
+tratar_faltantes,tipo_colegio,reemplazar nulo por 'Sin dato',145,"Es un dato descriptivo: eliminar la fila perdería sus demás datos, e inventar una ciudad o colegio sería falso. 'Sin dato' conserva la fila y es honesto."
+tratar_faltantes,motivo_retiro,dejar como nulo,0,No es un error: la columna solo aplica a desertores. Los 6562 nulos coinciden con los 6562 estudiantes activos o graduados.
+tratar_imposibles,edad,edad fuera de 15-60 a la mediana (22),12,"Una edad de 12 o 150 años es un error de digitación. La mediana representa al estudiante típico y, a diferencia del promedio, no la arrastran los valores extremos."
+tratar_imposibles,promedio_acumulado,eliminar filas con promedio > 5,15,"La escala es de 0 a 5. No sabemos si 45 es 4.5 (escala de 50) o 2.25 (escala de 100); adivinar la escala sería inventar la nota, igual que en el paso 7."
+tratar_imposibles,horas_trabajo_semana,nulo a 0 si no trabaja,2703,"Si el estudiante no trabaja, sus horas de trabajo son 0: el dato no falta, se deduce."
+tratar_imposibles,horas_trabajo_semana,más de 100 horas a la mediana de quienes trabajan (24),29,"200 horas no caben en una semana de estudio. Se usa la mediana solo de quienes trabajan, porque incluir a los que tienen 0 horas la bajaría artificialmente."

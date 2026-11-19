@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Reporte de deserción estudiantil</title>
+  <style>
+    body  { font-family: Arial, sans-serif; max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    h1    { color: #1a4e8a; }
+    h2    { color: #1a4e8a; border-bottom: 2px solid #ddd; margin-top: 40px; }
+    table { border-collapse: collapse; margin: 10px 0; }
+    th, td { border: 1px solid #ccc; padding: 4px 8px; }
+    th    { background: #f0f4f8; }
+    pre   { background: #f6f6f6; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Análisis de deserción estudiantil</h1>
+
+  <h2>1. Explorar</h2><h3>shape</h3><p>(10150, 23)</p><h3>info()</h3><pre><class 'pandas.DataFrame'>
+RangeIndex: 10150 entries, 0 to 10149
+Data columns (total 23 columns):
+ #   Column                Non-Null Count  Dtype  
+---  ------                --------------  -----  
+ 0   id_estudiante         10150 non-null  str    
+ 1   programa              10150 non-null  str    
+ 2   facultad              10150 non-null  str    
+ 3   jornada               10150 non-null  str    
+ 4   semestre              10150 non-null  int64  
+ 5   promedio_acumulado    9846 non-null   float64
+ 6   creditos_aprobados    10150 non-null  int64  
+ 7   materias_reprobadas   10150 non-null  int64  
+ 8   asistencia_pct        10150 non-null  str    
+ 9   sesiones_tutoria      10150 non-null  int64  
+ 10  cambios_programa      10150 non-null  int64  
+ 11  estrato               10150 non-null  int64  
+ 12  beca                  10150 non-null  str    
+ 13  trabaja               10150 non-null  str    
+ 14  horas_trabajo_semana  10150 non-null  str    
+ 15  distancia_km          9951 non-null   float64
+ 16  edad                  10150 non-null  int64  
+ 17  genero                10150 non-null  str    
+ 18  ciudad_procedencia    10047 non-null  str    
+ 19  tipo_colegio          9998 non-null   str    
+ 20  fecha_matricula       10150 non-null  str    
+ 21  estado                10150 non-null  str    
+ 22  motivo_retiro         3273 non-null   str    
+dtypes: float64(2), int64(7), str(14)
+memory usage: 1.8 MB
+</pre><h3>describe()</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>semestre</th>
+      <th>promedio_acumulado</th>
+      <th>creditos_aprobados</th>
+      <th>materias_reprobadas</th>
+      <th>sesiones_tutoria</th>
+      <th>cambios_programa</th>
+      <th>estrato</th>
+      <th>distancia_km</th>
+      <th>edad</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>10150.000000</td>
+      <td>9846.000000</td>
+      <td>10150.000000</td>
+      <td>10150.000000</td>
+      <td>10150.000000</td>
+      <td>10150.000000</td>
+      <td>10150.000000</td>
+      <td>9951.000000</td>
+      <td>10150.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>5.514187</td>
+      <td>3.760688</td>
+      <td>23.607882</td>
+      <td>1.405123</td>
+      <td>0.986897</td>
+      <td>0.079606</td>
+      <td>2.696946</td>
+      <td>32.244498</td>
+      <td>21.830246</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>2.884232</td>
+      <td>2.720929</td>
+      <td>14.936992</td>
+      <td>1.675701</td>
+      <td>1.027039</td>
+      <td>0.270695</td>
+      <td>1.360442</td>
+      <td>121.117830</td>
+      <td>4.221226</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>1.000000</td>
+      <td>1.170000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>1.100000</td>
+      <td>12.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>3.000000</td>
+      <td>3.220000</td>
+      <td>11.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>2.000000</td>
+      <td>8.500000</td>
+      <td>20.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>6.000000</td>
+      <td>3.680000</td>
+      <td>23.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>2.000000</td>
+      <td>13.800000</td>
+      <td>22.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>8.000000</td>
+      <td>4.110000</td>
+      <td>36.000000</td>
+      <td>2.000000</td>
+      <td>2.000000</td>
+      <td>0.000000</td>
+      <td>3.000000</td>
+      <td>22.200000</td>
+      <td>23.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>10.000000</td>
+      <td>78.000000</td>
+      <td>52.000000</td>
+      <td>13.000000</td>
+      <td>7.000000</td>
+      <td>1.000000</td>
+      <td>6.000000</td>
+      <td>999.000000</td>
+      <td>150.000000</td>
+    </tr>
+  </tbody>
+</table><h3>value_counts() de programa</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th>programa</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Derecho</th>
+      <td>1535</td>
+    </tr>
+    <tr>
+      <th>Administración de Empresas</th>
+      <td>1360</td>
+    </tr>
+    <tr>
+      <th>Ingeniería Industrial</th>
+      <td>1340</td>
+    </tr>
+    <tr>
+      <th>Ingeniería de Sistemas</th>
+      <td>1303</td>
+    </tr>
+    <tr>
+      <th>Contaduría Pública</th>
+      <td>1214</td>
+    </tr>
+    <tr>
+      <th>Enfermería</th>
+      <td>1189</td>
+    </tr>
+    <tr>
+      <th>Psicología</th>
+      <td>1065</td>
+    </tr>
+    <tr>
+      <th>Diseño Gráfico</th>
+      <td>884</td>
+    </tr>
+    <tr>
+      <th>Ingenieria de Sistemas</th>
+      <td>144</td>
+    </tr>
+    <tr>
+      <th>Psicologia</th>
+      <td>116</td>
+    </tr>
+  </tbody>
+</table><h3>value_counts() de jornada</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th>jornada</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Diurna</th>
+      <td>6030</td>
+    </tr>
+    <tr>
+      <th>Nocturna</th>
+      <td>2635</td>
+    </tr>
+    <tr>
+      <th>Fin de semana</th>
+      <td>1000</td>
+    </tr>
+    <tr>
+      <th>diurna</th>
+      <td>318</td>
+    </tr>
+    <tr>
+      <th>nocturna</th>
+      <td>89</td>
+    </tr>
+    <tr>
+      <th>NOCTURNA</th>
+      <td>78</td>
+    </tr>
+  </tbody>
+</table><h3>value_counts() de genero</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th>genero</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Femenino</th>
+      <td>5063</td>
+    </tr>
+    <tr>
+      <th>Masculino</th>
+      <td>4528</td>
+    </tr>
+    <tr>
+      <th>M</th>
+      <td>239</td>
+    </tr>
+    <tr>
+      <th>F</th>
+      <td>167</td>
+    </tr>
+    <tr>
+      <th>femenino</th>
+      <td>153</td>
+    </tr>
+  </tbody>
+</table><h3>value_counts() de estado</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th>estado</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>activo</th>
+      <td>5977</td>
+    </tr>
+    <tr>
+      <th>desertor</th>
+      <td>3273</td>
+    </tr>
+    <tr>
+      <th>graduado</th>
+      <td>900</td>
+    </tr>
+  </tbody>
+</table><h2>2. Auditar</h2><h3>Nulos reales</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nulos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>promedio_acumulado</th>
+      <td>304</td>
+    </tr>
+    <tr>
+      <th>distancia_km</th>
+      <td>199</td>
+    </tr>
+    <tr>
+      <th>ciudad_procedencia</th>
+      <td>103</td>
+    </tr>
+    <tr>
+      <th>tipo_colegio</th>
+      <td>152</td>
+    </tr>
+    <tr>
+      <th>motivo_retiro</th>
+      <td>6877</td>
+    </tr>
+  </tbody>
+</table><h3>Faltantes disfrazados</h3><p>Guiones en asistencia_pct: 202<br>Guiones en horas_trabajo_semana: 2822<br>Valores 999 en distancia_km: 152</p><h3>Símbolo % en asistencia_pct</h3><p>300 celdas</p><h3>Valores imposibles</h3><p>Edades fuera de 15 a 60 años: 12<br>Promedios mayores a 5: 17<br>Horas de trabajo mayores a 100 por semana: 30</p><h3>Filas duplicadas</h3><p>150 filas</p><h3>Fechas en formato DD/MM/AAAA</h3><p>3052 de 10150 fechas</p><h2>Gráfico 1: mapa de faltantes</h2><h3>Cómo leerlo</h3><p>Cada columna del dataset es una franja vertical y cada estudiante es una línea horizontal. Las líneas rojas son celdas vacías. Una columna casi toda roja tiene muchos faltantes; una columna gris no tiene ninguno.</p><h3>Celdas vacías en el dataset original</h3><img src="graficos/mapa_faltantes.png" width="100%"><h2>3. Convertir columnas a número</h2><h3>Tipo y nulos después de convertir</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tipo</th>
+      <th>nulos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>asistencia_pct</th>
+      <td>float64</td>
+      <td>202</td>
+    </tr>
+    <tr>
+      <th>horas_trabajo_semana</th>
+      <td>float64</td>
+      <td>2822</td>
+    </tr>
+    <tr>
+      <th>distancia_km</th>
+      <td>float64</td>
+      <td>351</td>
+    </tr>
+  </tbody>
+</table><h3>Estadísticas después de convertir</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>asistencia_pct</th>
+      <th>horas_trabajo_semana</th>
+      <th>distancia_km</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>9948.00</td>
+      <td>7328.00</td>
+      <td>9799.00</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>87.08</td>
+      <td>15.49</td>
+      <td>17.25</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>9.67</td>
+      <td>18.23</td>
+      <td>13.16</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>48.00</td>
+      <td>0.00</td>
+      <td>1.10</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>80.60</td>
+      <td>0.00</td>
+      <td>8.50</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>87.80</td>
+      <td>14.00</td>
+      <td>13.70</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>95.10</td>
+      <td>27.00</td>
+      <td>21.60</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>100.00</td>
+      <td>200.00</td>
+      <td>120.00</td>
+    </tr>
+  </tbody>
+</table><h2>4. Unificar categorías</h2><h3>programa después de unificar (260 celdas corregidas)</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th>programa</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Derecho</th>
+      <td>1535</td>
+    </tr>
+    <tr>
+      <th>Ingeniería de Sistemas</th>
+      <td>1447</td>
+    </tr>
+    <tr>
+      <th>Administración de Empresas</th>
+      <td>1360</td>
+    </tr>
+    <tr>
+      <th>Ingeniería Industrial</th>
+      <td>1340</td>
+    </tr>
+    <tr>
+      <th>Contaduría Pública</th>
+      <td>1214</td>
+    </tr>
+    <tr>
+      <th>Enfermería</th>
+      <td>1189</td>
+    </tr>
+    <tr>
+      <th>Psicología</th>
+      <td>1181</td>
+    </tr>
+    <tr>
+      <th>Diseño Gráfico</th>
+      <td>884</td>
+    </tr>
+  </tbody>
+</table><h3>jornada después de unificar (485 celdas corregidas)</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th>jornada</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Diurna</th>
+      <td>6348</td>
+    </tr>
+    <tr>
+      <th>Nocturna</th>
+      <td>2802</td>
+    </tr>
+    <tr>
+      <th>Fin de semana</th>
+      <td>1000</td>
+    </tr>
+  </tbody>
+</table><h3>genero después de unificar (559 celdas corregidas)</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th>genero</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Femenino</th>
+      <td>5383</td>
+    </tr>
+    <tr>
+      <th>Masculino</th>
+      <td>4767</td>
+    </tr>
+  </tbody>
+</table><h3>ciudad_procedencia después de unificar (542 celdas corregidas)</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th>ciudad_procedencia</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Bogotá</th>
+      <td>3054</td>
+    </tr>
+    <tr>
+      <th>Medellín</th>
+      <td>1773</td>
+    </tr>
+    <tr>
+      <th>Cali</th>
+      <td>1380</td>
+    </tr>
+    <tr>
+      <th>Otra ciudad</th>
+      <td>1246</td>
+    </tr>
+    <tr>
+      <th>Bucaramanga</th>
+      <td>1050</td>
+    </tr>
+    <tr>
+      <th>Rionegro</th>
+      <td>774</td>
+    </tr>
+    <tr>
+      <th>Barranquilla</th>
+      <td>770</td>
+    </tr>
+    <tr>
+      <th>NaN</th>
+      <td>103</td>
+    </tr>
+  </tbody>
+</table><h2>5. Convertir fechas</h2><h3>Resultado de la conversión</h3><p>Fechas en formato AAAA-MM-DD: 7098<br>Fechas en formato DD/MM/AAAA: 3052<br>Fechas sin convertir: 0<br>Tipo final de la columna: datetime64[us]<br>Rango: 2021-01-15 a 2025-09-10</p><h3>Ejemplo: antes y después</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>texto original</th>
+      <th>fecha convertida</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2023-05-04</td>
+      <td>2023-05-04</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>13/07/2023</td>
+      <td>2023-07-13</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>13/08/2022</td>
+      <td>2022-08-13</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2023-06-10</td>
+      <td>2023-06-10</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2022-07-27</td>
+      <td>2022-07-27</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>12/01/2023</td>
+      <td>2023-01-12</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>29/08/2025</td>
+      <td>2025-08-29</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>27/12/2022</td>
+      <td>2022-12-27</td>
+    </tr>
+  </tbody>
+</table><h2>6. Eliminar duplicados</h2><h3>Resultado</h3><p>Filas antes: 10150<br>Filas duplicadas eliminadas: 150<br>Filas después: 10000<br>id_estudiante repetidos antes de eliminar: 150<br>id_estudiante repetidos después de eliminar: 0</p><h2>7. Tratar faltantes</h2><h3>Nulos antes y después</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nulos antes</th>
+      <th>nulos después</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>promedio_acumulado</th>
+      <td>298</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>ciudad_procedencia</th>
+      <td>100</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>tipo_colegio</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>motivo_retiro</th>
+      <td>6764</td>
+      <td>6562</td>
+    </tr>
+  </tbody>
+</table><h3>Comprobación de motivo_retiro</h3><p>Nulos en motivo_retiro: 6562<br>Estudiantes que no son desertores: 6562</p><h3>Filas que quedan</h3><p>9702 estudiantes</p><h2>8. Tratar valores imposibles</h2><h3>Estadísticas antes</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>edad</th>
+      <th>promedio_acumulado</th>
+      <th>horas_trabajo_semana</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>9702.00</td>
+      <td>9702.00</td>
+      <td>6995.00</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>21.82</td>
+      <td>3.75</td>
+      <td>15.53</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>4.29</td>
+      <td>2.61</td>
+      <td>18.30</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>12.00</td>
+      <td>1.17</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>20.00</td>
+      <td>3.22</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>22.00</td>
+      <td>3.68</td>
+      <td>14.00</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>23.00</td>
+      <td>4.11</td>
+      <td>27.00</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>150.00</td>
+      <td>78.00</td>
+      <td>200.00</td>
+    </tr>
+  </tbody>
+</table><h3>Estadísticas después</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>edad</th>
+      <th>promedio_acumulado</th>
+      <th>horas_trabajo_semana</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>9687.00</td>
+      <td>9687.00</td>
+      <td>9687.00</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>21.72</td>
+      <td>3.65</td>
+      <td>10.67</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>2.20</td>
+      <td>0.64</td>
+      <td>13.54</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>17.00</td>
+      <td>1.17</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>20.00</td>
+      <td>3.22</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>22.00</td>
+      <td>3.68</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>23.00</td>
+      <td>4.11</td>
+      <td>22.00</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>29.00</td>
+      <td>5.00</td>
+      <td>40.00</td>
+    </tr>
+  </tbody>
+</table><h3>Filas que quedan</h3><p>9687 estudiantes</p><h2>9. Crear variables</h2><h3>Columna desertor</h3><p>Desertores (True): 3136 de 9687 estudiantes (32.4%)</p><h3>Cuartiles de asistencia</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>estudiantes</th>
+      <th>minima</th>
+      <th>maxima</th>
+      <th>promedio</th>
+    </tr>
+    <tr>
+      <th>cuartil_asistencia</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Q1 (más baja)</th>
+      <td>2385</td>
+      <td>48.0</td>
+      <td>80.5</td>
+      <td>73.9</td>
+    </tr>
+    <tr>
+      <th>Q2</th>
+      <td>2386</td>
+      <td>80.6</td>
+      <td>87.8</td>
+      <td>84.4</td>
+    </tr>
+    <tr>
+      <th>Q3</th>
+      <td>2348</td>
+      <td>87.9</td>
+      <td>95.0</td>
+      <td>91.3</td>
+    </tr>
+    <tr>
+      <th>Q4 (más alta)</th>
+      <td>2371</td>
+      <td>95.1</td>
+      <td>100.0</td>
+      <td>98.7</td>
+    </tr>
+  </tbody>
+</table><h3>Sin cuartil</h3><p>197 estudiantes no tienen asistencia registrada (venían con '-'), así que no entran en ningún cuartil.</p><h2>Gráfico 2: distribuciones antes y después</h2><h3>Promedio acumulado y edad</h3><img src="graficos/distribuciones_antes_despues.png" width="100%"><h2>Gráfico 3: deserción por programa</h2><h3>Tasa de deserción por programa</h3><img src="graficos/tasa_desercion_por_programa.png" width="100%"><h2>Gráfico 4: deserción por asistencia</h2><h3>Tasa de deserción por cuartil de asistencia</h3><img src="graficos/tasa_desercion_por_asistencia.png" width="100%"><h2>10. Las cinco preguntas</h2><h3>Pregunta 1: ¿Qué programa presenta la tasa de deserción más alta?</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tasa</th>
+      <th>estudiantes</th>
+    </tr>
+    <tr>
+      <th>programa</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Ingeniería Industrial</th>
+      <td>0.402</td>
+      <td>1271</td>
+    </tr>
+    <tr>
+      <th>Ingeniería de Sistemas</th>
+      <td>0.382</td>
+      <td>1386</td>
+    </tr>
+    <tr>
+      <th>Diseño Gráfico</th>
+      <td>0.356</td>
+      <td>848</td>
+    </tr>
+    <tr>
+      <th>Enfermería</th>
+      <td>0.313</td>
+      <td>1132</td>
+    </tr>
+    <tr>
+      <th>Derecho</th>
+      <td>0.305</td>
+      <td>1447</td>
+    </tr>
+    <tr>
+      <th>Administración de Empresas</th>
+      <td>0.297</td>
+      <td>1304</td>
+    </tr>
+    <tr>
+      <th>Contaduría Pública</th>
+      <td>0.270</td>
+      <td>1162</td>
+    </tr>
+    <tr>
+      <th>Psicología</th>
+      <td>0.260</td>
+      <td>1137</td>
+    </tr>
+  </tbody>
+</table><p><strong>Respuesta:</strong> Ingeniería Industrial, con una tasa de 40.2% sobre 1271 estudiantes.</p><h3>Pregunta 2: ¿Hay diferencia en la deserción entre becados y no becados?</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tasa</th>
+      <th>estudiantes</th>
+    </tr>
+    <tr>
+      <th>beca</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>no</th>
+      <td>0.364</td>
+      <td>7004</td>
+    </tr>
+    <tr>
+      <th>sí</th>
+      <td>0.219</td>
+      <td>2683</td>
+    </tr>
+  </tbody>
+</table><p><strong>Respuesta:</strong> becados 21.9% (2683 estudiantes) frente a no becados 36.4% (7004 estudiantes). Es una posible causa de que la beca aumente la permanencia pero no se puede afirmar por completo.</p><h3>Pregunta 3: ¿Qué jornada tiene el menor promedio acumulado?</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>promedio</th>
+      <th>estudiantes</th>
+    </tr>
+    <tr>
+      <th>jornada</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Nocturna</th>
+      <td>3.46</td>
+      <td>2666</td>
+    </tr>
+    <tr>
+      <th>Fin de semana</th>
+      <td>3.70</td>
+      <td>949</td>
+    </tr>
+    <tr>
+      <th>Diurna</th>
+      <td>3.72</td>
+      <td>6072</td>
+    </tr>
+  </tbody>
+</table><p><strong>Respuesta:</strong> Nocturna, con promedio 3.46 sobre 2666 estudiantes.</p><h3>Pregunta 4: ¿Cuántas materias reprobadas tienen en promedio los desertores frente a los activos?</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>materias_reprobadas</th>
+      <th>estudiantes</th>
+    </tr>
+    <tr>
+      <th>estado</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>activo</th>
+      <td>0.62</td>
+      <td>5692</td>
+    </tr>
+    <tr>
+      <th>desertor</th>
+      <td>3.07</td>
+      <td>3136</td>
+    </tr>
+  </tbody>
+</table><p><strong>Respuesta:</strong> los desertores tienen en promedio 3.07 materias reprobadas (3136 estudiantes) y los activos 0.62 (5692 estudiantes). Se excluyen los graduados porque no pertenecen a ninguno de los dos grupos.</p><h3>Pregunta 5: ¿La deserción aumenta conforme baja la asistencia?</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tasa</th>
+      <th>asistencia_promedio</th>
+      <th>estudiantes</th>
+    </tr>
+    <tr>
+      <th>cuartil_asistencia</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Q1 (más baja)</th>
+      <td>0.619</td>
+      <td>73.905</td>
+      <td>2385</td>
+    </tr>
+    <tr>
+      <th>Q2</th>
+      <td>0.367</td>
+      <td>84.406</td>
+      <td>2386</td>
+    </tr>
+    <tr>
+      <th>Q3</th>
+      <td>0.207</td>
+      <td>91.336</td>
+      <td>2348</td>
+    </tr>
+    <tr>
+      <th>Q4 (más alta)</th>
+      <td>0.094</td>
+      <td>98.660</td>
+      <td>2371</td>
+    </tr>
+  </tbody>
+</table><p><strong>Respuesta:</strong> sí. La tasa pasa de 9.4% en el cuartil de asistencia más alta a 61.9% en el más bajo. la baja asistencia puede ser una señal de alerta.</p><h2>Tabla de decisiones</h2><h3>Decisiones de limpieza</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>paso</th>
+      <th>columna</th>
+      <th>accion</th>
+      <th>filas_afectadas</th>
+      <th>justificacion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>convertir_numericos</td>
+      <td>asistencia_pct</td>
+      <td>quitar símbolo %</td>
+      <td>300</td>
+      <td>El % es solo formato peroo el número es el mismo y se necesita como número para calcular.</td>
+    </tr>
+    <tr>
+      <td>convertir_numericos</td>
+      <td>asistencia_pct</td>
+      <td>guion '-' a nulo</td>
+      <td>202</td>
+      <td>El guion significa 'sin dato' --&gt; nulo real para que pandas lo reconozca.</td>
+    </tr>
+    <tr>
+      <td>convertir_numericos</td>
+      <td>horas_trabajo_semana</td>
+      <td>guion '-' a nulo</td>
+      <td>2822</td>
+      <td>El guion significa 'sin dato' --&gt; nulo real para que pandas lo reconozca.</td>
+    </tr>
+    <tr>
+      <td>convertir_numericos</td>
+      <td>distancia_km</td>
+      <td>999 a nulo</td>
+      <td>152</td>
+      <td>999 es un código de 'sin dato', no una distancia real; dejarlo inflaría el promedio.</td>
+    </tr>
+    <tr>
+      <td>unificar_categorias</td>
+      <td>programa</td>
+      <td>unificar escritura</td>
+      <td>260</td>
+      <td>Eran el mismo valor escrito distinto (mayúsculas, tildes o abreviaturas); sin unificar, un mismo grupo se contaría como varios.</td>
+    </tr>
+    <tr>
+      <td>unificar_categorias</td>
+      <td>jornada</td>
+      <td>unificar escritura</td>
+      <td>485</td>
+      <td>Eran el mismo valor escrito distinto (mayúsculas, tildes o abreviaturas); sin unificar, un mismo grupo se contaría como varios.</td>
+    </tr>
+    <tr>
+      <td>unificar_categorias</td>
+      <td>genero</td>
+      <td>unificar escritura</td>
+      <td>559</td>
+      <td>Eran el mismo valor escrito distinto (mayúsculas, tildes o abreviaturas); sin unificar, un mismo grupo se contaría como varios.</td>
+    </tr>
+    <tr>
+      <td>unificar_categorias</td>
+      <td>ciudad_procedencia</td>
+      <td>unificar escritura</td>
+      <td>542</td>
+      <td>Eran el mismo valor escrito distinto (mayúsculas, tildes o abreviaturas); sin unificar, un mismo grupo se contaría como varios.</td>
+    </tr>
+    <tr>
+      <td>convertir_fechas</td>
+      <td>fecha_matricula</td>
+      <td>convertir DD/MM/AAAA a fecha</td>
+      <td>3052</td>
+      <td>La misma columna tenía dos formatos; con formato explícito no se confunden día y mes, y la columna queda como fecha para poder calcular con ella.</td>
+    </tr>
+    <tr>
+      <td>eliminar_duplicados</td>
+      <td>todas</td>
+      <td>eliminar filas duplicadas</td>
+      <td>150</td>
+      <td>Son filas idénticas en todas las columnas, incluido id_estudiante: es el mismo estudiante registrado dos veces. Dejarlas lo contaría doble en las tasas.</td>
+    </tr>
+    <tr>
+      <td>tratar_faltantes</td>
+      <td>promedio_acumulado</td>
+      <td>eliminar filas</td>
+      <td>298</td>
+      <td>Una nota no se puede inventar. Imputar el promedio pondría a todos en la media y escondería justo a los estudiantes con bajo rendimiento, que importan para la deserción.</td>
+    </tr>
+    <tr>
+      <td>tratar_faltantes</td>
+      <td>ciudad_procedencia</td>
+      <td>reemplazar nulo por 'Sin dato'</td>
+      <td>96</td>
+      <td>Es un dato descriptivo: eliminar la fila perdería sus demás datos, e inventar una ciudad o colegio sería falso. 'Sin dato' conserva la fila y es honesto.</td>
+    </tr>
+    <tr>
+      <td>tratar_faltantes</td>
+      <td>tipo_colegio</td>
+      <td>reemplazar nulo por 'Sin dato'</td>
+      <td>145</td>
+      <td>Es un dato descriptivo: eliminar la fila perdería sus demás datos, e inventar una ciudad o colegio sería falso. 'Sin dato' conserva la fila y es honesto.</td>
+    </tr>
+    <tr>
+      <td>tratar_faltantes</td>
+      <td>motivo_retiro</td>
+      <td>dejar como nulo</td>
+      <td>0</td>
+      <td>No es un error: la columna solo aplica a desertores. Los 6562 nulos coinciden con los 6562 estudiantes activos o graduados.</td>
+    </tr>
+    <tr>
+      <td>tratar_imposibles</td>
+      <td>edad</td>
+      <td>edad fuera de 15-60 a la mediana (22)</td>
+      <td>12</td>
+      <td>Una edad de 12 o 150 años es un error de digitación. La mediana representa al estudiante típico y, a diferencia del promedio, no la arrastran los valores extremos.</td>
+    </tr>
+    <tr>
+      <td>tratar_imposibles</td>
+      <td>promedio_acumulado</td>
+      <td>eliminar filas con promedio &gt; 5</td>
+      <td>15</td>
+      <td>La escala es de 0 a 5. No sabemos si 45 es 4.5 (escala de 50) o 2.25 (escala de 100); adivinar la escala sería inventar la nota, igual que en el paso 7.</td>
+    </tr>
+    <tr>
+      <td>tratar_imposibles</td>
+      <td>horas_trabajo_semana</td>
+      <td>nulo a 0 si no trabaja</td>
+      <td>2703</td>
+      <td>Si el estudiante no trabaja, sus horas de trabajo son 0: el dato no falta, se deduce.</td>
+    </tr>
+    <tr>
+      <td>tratar_imposibles</td>
+      <td>horas_trabajo_semana</td>
+      <td>más de 100 horas a la mediana de quienes trabajan (24)</td>
+      <td>29</td>
+      <td>200 horas no caben en una semana de estudio. Se usa la mediana solo de quienes trabajan, porque incluir a los que tienen 0 horas la bajaría artificialmente.</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
