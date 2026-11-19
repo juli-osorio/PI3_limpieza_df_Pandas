@@ -463,7 +463,24 @@ def grafico_faltantes(df):
     Pista: sns.heatmap(df.isnull(), cbar=False)
     """
     # TODO 10: dibujar, guardar en GRAFICOS / "mapa_faltantes.png" y mostrar.
-    pass
+    GRAFICOS.mkdir(parents=True, exist_ok=True)
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    sns.heatmap(df.isnull(), cbar=False, yticklabels=False, ax=ax,
+                cmap=["#f2f2f2", "#c0392b"])  # gris = hay dato, rojo = celda vacía
+    ax.set_title("Mapa de faltantes del dataset original (rojo = celda vacía)")
+    ax.set_xlabel("Columnas")
+    ax.set_ylabel(f"Estudiantes ({len(df)} filas)")
+    fig.tight_layout()
+    fig.savefig(GRAFICOS / "mapa_faltantes.png", dpi=120)
+    plt.close(fig)
+
+    seccion("Gráfico 1: mapa de faltantes")
+    bloque("Cómo leerlo",
+           "<p>Cada columna del dataset es una franja vertical y cada estudiante es una línea "
+           "horizontal. Las líneas rojas son celdas vacías. Una columna casi toda roja tiene "
+           "muchos faltantes; una columna gris no tiene ninguno.</p>")
+    bloque("Celdas vacías en el dataset original", '<img src="graficos/mapa_faltantes.png" width="100%">')
 
 
 def grafico_distribuciones(antes, despues):
@@ -472,7 +489,24 @@ def grafico_distribuciones(antes, despues):
     Pregunta: ¿qué cambió en cada distribución? ¿Por qué?
     """
     # TODO 11: dibujar los cuatro boxplots, guardar en GRAFICOS / "distribuciones_antes_despues.png" y mostrar.
-    pass
+    fig, ejes = plt.subplots(2, 2, figsize=(12, 8))
+
+    sns.boxplot(x=antes["promedio_acumulado"], ax=ejes[0, 0])
+    ejes[0, 0].set_title("Promedio acumulado: ANTES")
+    sns.boxplot(x=despues["promedio_acumulado"], ax=ejes[0, 1])
+    ejes[0, 1].set_title("Promedio acumulado: DESPUÉS")
+
+    sns.boxplot(x=antes["edad"], ax=ejes[1, 0])
+    ejes[1, 0].set_title("Edad: ANTES")
+    sns.boxplot(x=despues["edad"], ax=ejes[1, 1])
+    ejes[1, 1].set_title("Edad: DESPUÉS")
+
+    fig.tight_layout()
+    fig.savefig(GRAFICOS / "distribuciones_antes_despues.png", dpi=120)
+    plt.close(fig)
+
+    seccion("Gráfico 2: distribuciones antes y después")
+    bloque("Promedio acumulado y edad", '<img src="graficos/distribuciones_antes_despues.png" width="100%">')
 
 
 def grafico_tasa_programa(df):
@@ -481,7 +515,22 @@ def grafico_tasa_programa(df):
     Pista: df.groupby("programa")["desertor"].mean()
     """
     # TODO 12: dibujar la tasa por programa, guardar en GRAFICOS / "tasa_desercion_por_programa.png" y mostrar.
-    pass
+    tasa = df.groupby("programa")["desertor"].mean().sort_values(ascending=False)
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    tasa.plot(kind="bar", ax=ax, color="#1a4e8a")
+    ax.set_title("Tasa de deserción por programa")
+    ax.set_xlabel("")
+    ax.set_ylabel("Proporción de desertores")
+    ax.tick_params(axis="x", rotation=45)
+    for i, valor in enumerate(tasa):
+        ax.text(i, valor + 0.005, f"{valor:.0%}", ha="center")
+    fig.tight_layout()
+    fig.savefig(GRAFICOS / "tasa_desercion_por_programa.png", dpi=120)
+    plt.close(fig)
+
+    seccion("Gráfico 3: deserción por programa")
+    bloque("Tasa de deserción por programa", '<img src="graficos/tasa_desercion_por_programa.png" width="100%">')
 
 
 def grafico_tasa_asistencia(df):
@@ -490,7 +539,22 @@ def grafico_tasa_asistencia(df):
     Pista: df.groupby("cuartil_asistencia", observed=True)["desertor"].mean()
     """
     # TODO 13: dibujar la tasa por cuartil, guardar en GRAFICOS / "tasa_desercion_por_asistencia.png" y mostrar.
-    pass
+    tasa = df.groupby("cuartil_asistencia", observed=True)["desertor"].mean()
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    tasa.plot(kind="bar", ax=ax, color="#c0392b")
+    ax.set_title("Tasa de deserción por cuartil de asistencia")
+    ax.set_xlabel("Cuartil de asistencia")
+    ax.set_ylabel("Proporción de desertores")
+    ax.tick_params(axis="x", rotation=0)
+    for i, valor in enumerate(tasa):
+        ax.text(i, valor + 0.005, f"{valor:.0%}", ha="center")
+    fig.tight_layout()
+    fig.savefig(GRAFICOS / "tasa_desercion_por_asistencia.png", dpi=120)
+    plt.close(fig)
+
+    seccion("Gráfico 4: deserción por asistencia")
+    bloque("Tasa de deserción por cuartil de asistencia", '<img src="graficos/tasa_desercion_por_asistencia.png" width="100%">')
 
 
 
