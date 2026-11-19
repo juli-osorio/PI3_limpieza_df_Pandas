@@ -193,6 +193,38 @@ def unificar_categorias(df):
     Pregunta: ¿qué variantes son el mismo valor? ¿Hay alguna que no debas unificar?
     """
     # TODO 4: unificar las escrituras de programa, jornada, genero y ciudad_procedencia.
+    seccion("4. Unificar categorías")
+
+    # Variantes que encontramos con value_counts(), ya en minúsculas, y su forma correcta
+    variantes = {
+        "programa": {"ingenieria de sistemas": "Ingeniería de Sistemas",
+                     "psicologia": "Psicología"},
+        "jornada": {},
+        "genero": {"m": "Masculino", "f": "Femenino"},
+        "ciudad_procedencia": {"bogota": "Bogotá", "medellin": "Medellín"},
+    }
+
+    for col, valores_validos in VALIDOS.items():
+        antes = df[col].copy()
+
+        # 1. Normalizar: quitar espacios y pasar a minúsculas
+        df[col] = df[col].str.strip().str.lower()
+
+        # 2. Diccionario: cada valor válido en minúscula -> su forma correcta, más las variantes
+        diccionario = {v.lower(): v for v in valores_validos}
+        diccionario.update(variantes[col])
+        df[col] = df[col].replace(diccionario)
+
+        # 3. Contar cuántas celdas cambiaron (sin contar los nulos)
+        cambiaron = (antes != df[col]) & antes.notna()
+        registrar("unificar_categorias", col, "unificar escritura", cambiaron.sum(),
+                  "Eran el mismo valor escrito distinto (mayúsculas, tildes o abreviaturas); "
+                  "sin unificar, un mismo grupo se contaría como varios.")
+
+        # 4. Reporte: cómo quedó la columna
+        bloque(f"{col} después de unificar ({cambiaron.sum()} celdas corregidas)",
+               df[col].value_counts(dropna=False).to_frame().to_html())
+
     return df
 
 
