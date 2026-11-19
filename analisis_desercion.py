@@ -239,6 +239,37 @@ def convertir_fechas(df):
     y junta los resultados con fillna(). Registra cuántas fechas tenían el segundo formato.
     """
     # TODO 5: convertir fecha_matricula a fecha con los dos formatos.
+    seccion("5. Convertir fechas")
+
+    texto = df["fecha_matricula"]
+
+    # 1. Intentar cada formato por separado (lo que no coincide queda como NaT)
+    fechas_iso = pd.to_datetime(texto, format="%Y-%m-%d", errors="coerce")  # 2023-05-04
+    fechas_dmy = pd.to_datetime(texto, format="%d/%m/%Y", errors="coerce")  # 13/07/2023
+
+    # 2. Contar cuántas venían en DD/MM/AAAA (no eran ISO pero sí DD/MM)
+    en_dmy = (fechas_iso.isna() & fechas_dmy.notna()).sum()
+
+    # 3. Juntar: donde la ISO quedó vacía, usar la DD/MM
+    df["fecha_matricula"] = fechas_iso.fillna(fechas_dmy)
+
+    # 4. Verificar que no quedó ninguna sin convertir
+    sin_convertir = df["fecha_matricula"].isna().sum()
+
+    registrar("convertir_fechas", "fecha_matricula", "convertir DD/MM/AAAA a fecha", en_dmy,
+              "La misma columna tenía dos formatos; con formato explícito no se confunden "
+              "día y mes, y la columna queda como fecha para poder calcular con ella.")
+
+    bloque("Resultado de la conversión",
+           f"<p>Fechas en formato AAAA-MM-DD: {fechas_iso.notna().sum()}<br>"
+           f"Fechas en formato DD/MM/AAAA: {en_dmy}<br>"
+           f"Fechas sin convertir: {sin_convertir}<br>"
+           f"Tipo final de la columna: {df['fecha_matricula'].dtype}<br>"
+           f"Rango: {df['fecha_matricula'].min().date()} a {df['fecha_matricula'].max().date()}</p>")
+
+    ejemplo = pd.DataFrame({"texto original": texto, "fecha convertida": df["fecha_matricula"]}).head(8)
+    bloque("Ejemplo: antes y después", ejemplo.to_html())
+
     return df
 
 #---------------------------------------------------------------
