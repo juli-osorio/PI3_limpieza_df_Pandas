@@ -432,8 +432,30 @@ def crear_variables(df):
     Pregunta: ¿por qué conviene usar cuartiles y no valores exactos de asistencia?
     """
     # TODO 9: crear las columnas desertor y cuartil_asistencia.
+    seccion("9. Crear variables")
+
+    # --- desertor: True / False ---
+    df["desertor"] = df["estado"].eq("desertor")
+    bloque("Columna desertor",
+           f"<p>Desertores (True): {df['desertor'].sum()} de {len(df)} estudiantes "
+           f"({df['desertor'].mean():.1%})</p>")
+
+    # --- cuartil_asistencia: 4 grupos con el mismo número de estudiantes ---
+    df["cuartil_asistencia"] = pd.qcut(df["asistencia_pct"], 4,
+                                       labels=["Q1 (más baja)", "Q2", "Q3", "Q4 (más alta)"])
+
+    resumen = df.groupby("cuartil_asistencia", observed=True)["asistencia_pct"].agg(
+        estudiantes="count", minima="min", maxima="max", promedio="mean").round(1)
+    bloque("Cuartiles de asistencia", resumen.to_html())
+    bloque("Sin cuartil",
+           f"<p>{df['cuartil_asistencia'].isnull().sum()} estudiantes no tienen asistencia "
+           f"registrada (venían con '-'), así que no entran en ningún cuartil.</p>")
+
     return df
 
+#---------------------------------------------------------------
+#DIEZ
+#---------------------------------------------------------------
 
 def grafico_faltantes(df):
     """Gráfico 1: mapa de faltantes del dataset original.
@@ -470,9 +492,6 @@ def grafico_tasa_asistencia(df):
     # TODO 13: dibujar la tasa por cuartil, guardar en GRAFICOS / "tasa_desercion_por_asistencia.png" y mostrar.
     pass
 
-#---------------------------------------------------------------
-#DIEZ
-#---------------------------------------------------------------
 
 
 def responder_preguntas(df):
