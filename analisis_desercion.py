@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import io
 
 pd.set_option("display.width", 200)
 pd.set_option("display.max_columns", 30)
@@ -11,6 +12,8 @@ pd.set_option("display.max_columns", 30)
 RAW = Path(__file__).parent / "Data" / "raw" / "datos_estudiantes.csv"
 PROCESSED = Path(__file__).parent / "Data" / "processed"
 GRAFICOS = PROCESSED / "graficos"
+
+PLANTILLA = Path(__file__).parent / "plantilla.html"
 
 # Valores válidos de cada columna categórica (la forma correcta de escribirlos).
 VALIDOS = {
@@ -23,6 +26,27 @@ VALIDOS = {
 }
 
 DECISIONES = []
+
+REPORTE = []  # lista donde se guardan los pedazos del HTML
+
+
+def seccion(titulo):
+    """Agrega un título grande al reporte (ej: '1. Explorar')."""
+    REPORTE.append(f"<h2>{titulo}</h2>")
+
+
+def bloque(subtitulo, contenido):
+    """Agrega un subtítulo y su contenido al reporte."""
+    REPORTE.append(f"<h3>{subtitulo}</h3>{contenido}")
+
+
+def guardar_reporte():
+    """Lee la plantilla, pone los resultados en el hueco y guarda reporte.html."""
+    plantilla = PLANTILLA.read_text(encoding="utf-8")
+    html = plantilla.replace("<!-- CONTENIDO -->", "".join(REPORTE))
+    PROCESSED.mkdir(parents=True, exist_ok=True)
+    (PROCESSED / "reporte.html").write_text(html, encoding="utf-8")
+    print("Reporte guardado en Data/processed/reporte.html")
 
 
 def registrar(paso, columna, accion, filas, justificacion):
@@ -41,12 +65,18 @@ def explorar(df):
     Pregunta: ¿alguna columna numérica aparece como texto? ¿Por qué crees que pasa?
     """
     # TODO 1: imprimir shape, info(), describe() y value_counts() de las columnas indicadas.
-    print("Forma del dataset:", df.shape)
-    df.info()
-    print(df.describe())
+    seccion("1. Explorar")
+
+    bloque("shape", f"<p>{df.shape}</p>")
+
+    buffer = io.StringIO()
+    df.info(buf=buffer)
+    bloque("info()", f"<pre>{buffer.getvalue()}</pre>")
+
+    bloque("describe()", df.describe().to_html())
+
     for col in ["programa", "jornada", "genero", "estado"]:
-        print(f"\n--- {col} ---")
-        print(df[col].value_counts())
+        bloque(f"value_counts() de {col}", df[col].value_counts().to_frame().to_html())
 
 
 def auditar(df):
@@ -222,6 +252,7 @@ def main():
     print("\nTabla de decisiones:")
     print(pd.DataFrame(DECISIONES))
     guardar(df)
+    guardar_reporte()
 
 
 if __name__ == "__main__":
