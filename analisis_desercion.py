@@ -317,6 +317,44 @@ def tratar_faltantes(df):
     - motivo_retiro tiene muchos nulos. ¿Son errores? (Pista: ¿para quiénes aplica esa columna?)
     """
     # TODO 7: tratar los nulos de promedio_acumulado, ciudad_procedencia y tipo_colegio.
+    seccion("7. Tratar faltantes")
+
+    columnas = ["promedio_acumulado", "ciudad_procedencia", "tipo_colegio", "motivo_retiro"]
+    nulos_antes = df[columnas].isnull().sum()
+
+    # --- promedio_acumulado: eliminar las filas sin nota ---
+    sin_promedio = df["promedio_acumulado"].isnull().sum()
+    df = df.dropna(subset=["promedio_acumulado"]).reset_index(drop=True)
+    registrar("tratar_faltantes", "promedio_acumulado", "eliminar filas", sin_promedio,
+              "Una nota no se puede inventar. Imputar el promedio pondría a todos en la media "
+              "y escondería justo a los estudiantes con bajo rendimiento, que importan para la deserción.")
+
+    # --- ciudad_procedencia y tipo_colegio: marcar como 'Sin dato' ---
+    for col in ["ciudad_procedencia", "tipo_colegio"]:
+        faltan = df[col].isnull().sum()
+        df[col] = df[col].fillna("Sin dato")
+        registrar("tratar_faltantes", col, "reemplazar nulo por 'Sin dato'", faltan,
+                  "Es un dato descriptivo: eliminar la fila perdería sus demás datos, e inventar "
+                  "una ciudad o colegio sería falso. 'Sin dato' conserva la fila y es honesto.")
+
+    # --- motivo_retiro: los nulos son esperados, no se tocan ---
+    sin_motivo = df["motivo_retiro"].isnull().sum()
+    no_desertores = (df["estado"] != "desertor").sum()
+    registrar("tratar_faltantes", "motivo_retiro", "dejar como nulo", 0,
+              f"No es un error: la columna solo aplica a desertores. Los {sin_motivo} nulos "
+              f"coinciden con los {no_desertores} estudiantes activos o graduados.")
+
+    # --- Reporte: nulos antes y después ---
+    resumen = pd.DataFrame({
+        "nulos antes": nulos_antes,
+        "nulos después": df[columnas].isnull().sum(),
+    })
+    bloque("Nulos antes y después", resumen.to_html())
+    bloque("Comprobación de motivo_retiro",
+           f"<p>Nulos en motivo_retiro: {sin_motivo}<br>"
+           f"Estudiantes que no son desertores: {no_desertores}</p>")
+    bloque("Filas que quedan", f"<p>{len(df)} estudiantes</p>")
+
     return df
 
 
