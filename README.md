@@ -200,8 +200,8 @@ Sí:
 En el cuartil de menor asistencia deserta 6 de cada 10 estudiantes; en el de mayor asistencia, menos de 1 de cada 10.
 
 ### 4. Reflexión: asociación y causalidad
-- Es posible que los becados deserten menos porque la beca los retiene, sin embargo es una asociación y puede que allí no esté la causa de la retención. Abría que ver más factores, como si trabaja, la situación ecónomica. -->
-- Faltar a clase puede ser la causa de la deserción, pero también puede ser un efecto. -->
+- Es posible que los becados deserten menos porque la beca los retiene, sin embargo es una asociación y puede que allí no esté la causa de la retención. Abría que ver más factores, como si trabaja, la situación ecónomica. 
+- Faltar a clase puede ser la causa de la deserción, pero también puede ser un efecto.
 - Quizas se puedan sacar mejores conclusiones aislando los grupos por personas que trabajan o por situación económica para obtener la causa de la deserción.
 
 ### 5. Reflexión: `motivo_retiro` y la predicción
