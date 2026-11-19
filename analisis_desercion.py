@@ -142,6 +142,43 @@ def convertir_numericos(df):
     Registra cada conversión con registrar().
     """
     # TODO 3: convertir asistencia_pct, horas_trabajo_semana y distancia_km a número.
+    seccion("3. Convertir columnas a número")
+
+    # --- asistencia_pct: quitar % y convertir '-' en nulo ---
+    con_porcentaje = df["asistencia_pct"].str.contains("%", regex=False).sum()
+    guiones_asist = (df["asistencia_pct"] == "-").sum()
+
+    df["asistencia_pct"] = df["asistencia_pct"].str.replace("%", "", regex=False)
+    df["asistencia_pct"] = pd.to_numeric(df["asistencia_pct"], errors="coerce")
+
+    registrar("convertir_numericos", "asistencia_pct", "quitar símbolo %", con_porcentaje,
+              "El % es solo formato peroo el número es el mismo y se necesita como número para calcular.")
+    registrar("convertir_numericos", "asistencia_pct", "guion '-' a nulo", guiones_asist,
+              "El guion significa 'sin dato' --> nulo real para que pandas lo reconozca.")
+
+    # --- horas_trabajo_semana: convertir '-' en nulo ---
+    guiones_horas = (df["horas_trabajo_semana"] == "-").sum()
+    df["horas_trabajo_semana"] = pd.to_numeric(df["horas_trabajo_semana"], errors="coerce")
+
+    registrar("convertir_numericos", "horas_trabajo_semana", "guion '-' a nulo", guiones_horas,
+              "El guion significa 'sin dato' --> nulo real para que pandas lo reconozca.")
+
+    # --- distancia_km: 999 es un faltante disfrazado ---
+    dist_999 = (df["distancia_km"] == 999).sum()
+    df["distancia_km"] = df["distancia_km"].replace(999, np.nan)
+
+    registrar("convertir_numericos", "distancia_km", "999 a nulo", dist_999,
+              "999 es un código de 'sin dato', no una distancia real; dejarlo inflaría el promedio.")
+
+    # --- Reporte: cómo quedaron las tres columnas ---
+    columnas = ["asistencia_pct", "horas_trabajo_semana", "distancia_km"]
+    resumen = pd.DataFrame({
+        "tipo": df[columnas].dtypes.astype(str),
+        "nulos": df[columnas].isnull().sum(),
+    })
+    bloque("Tipo y nulos después de convertir", resumen.to_html())
+    bloque("Estadísticas después de convertir", df[columnas].describe().round(2).to_html())
+
     return df
 
 #---------------------------------------------------------------
@@ -320,8 +357,8 @@ def main():
     grafico_tasa_asistencia(df)
 
     responder_preguntas(df)
-    print("\nTabla de decisiones:")
-    print(pd.DataFrame(DECISIONES))
+    seccion("Tabla de decisiones")
+    bloque("Decisiones de limpieza", pd.DataFrame(DECISIONES).to_html(index=False))
     guardar(df)
     guardar_reporte()
 
