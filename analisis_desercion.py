@@ -556,7 +556,7 @@ def grafico_tasa_asistencia(df):
     seccion("Gráfico 4: deserción por asistencia")
     bloque("Tasa de deserción por cuartil de asistencia", '<img src="graficos/tasa_desercion_por_asistencia.png" width="100%">')
 
-
+#---------------------------------------------------------------
 
 def responder_preguntas(df):
     """PASO 10 del Word: las cinco preguntas de la institución.
@@ -571,10 +571,63 @@ def responder_preguntas(df):
                 (Usa cuartil_asistencia.)
     """
     # TODO 14: responder las cinco preguntas con groupby() y agg().
-    pass
+    seccion("10. Las cinco preguntas")
+
+    # --- Pregunta 1: tasa de deserción por programa ---
+    p1 = (df.groupby("programa")
+            .agg(tasa=("desertor", "mean"), estudiantes=("desertor", "count"))
+            .sort_values("tasa", ascending=False))
+    mayor = p1.index[0]
+    bloque("Pregunta 1: ¿Qué programa presenta la tasa de deserción más alta?",
+           p1.round(3).to_html() +
+           f"<p><strong>Respuesta:</strong> {mayor}, con una tasa de {p1.loc[mayor, 'tasa']:.1%} "
+           f"sobre {p1.loc[mayor, 'estudiantes']} estudiantes.</p>")
+
+    # --- Pregunta 2: becados vs no becados ---
+    p2 = df.groupby("beca").agg(tasa=("desertor", "mean"), estudiantes=("desertor", "count"))
+    bloque("Pregunta 2: ¿Hay diferencia en la deserción entre becados y no becados?",
+           p2.round(3).to_html() +
+           f"<p><strong>Respuesta:</strong> becados {p2.loc['sí', 'tasa']:.1%} "
+           f"({p2.loc['sí', 'estudiantes']} estudiantes) frente a no becados "
+           f"{p2.loc['no', 'tasa']:.1%} ({p2.loc['no', 'estudiantes']} estudiantes). "
+           f"Es una asociación, no prueba que la beca cause la permanencia.</p>")
+
+    # --- Pregunta 3: promedio acumulado por jornada ---
+    p3 = (df.groupby("jornada")
+            .agg(promedio=("promedio_acumulado", "mean"), estudiantes=("promedio_acumulado", "count"))
+            .sort_values("promedio"))
+    menor = p3.index[0]
+    bloque("Pregunta 3: ¿Qué jornada tiene el menor promedio acumulado?",
+           p3.round(2).to_html() +
+           f"<p><strong>Respuesta:</strong> {menor}, con promedio {p3.loc[menor, 'promedio']:.2f} "
+           f"sobre {p3.loc[menor, 'estudiantes']} estudiantes.</p>")
+
+    # --- Pregunta 4: materias reprobadas, desertores vs activos (sin graduados) ---
+    sin_graduados = df[df["estado"] != "graduado"]
+    p4 = sin_graduados.groupby("estado").agg(
+        materias_reprobadas=("materias_reprobadas", "mean"),
+        estudiantes=("materias_reprobadas", "count"))
+    bloque("Pregunta 4: ¿Cuántas materias reprobadas tienen en promedio los desertores frente a los activos?",
+           p4.round(2).to_html() +
+           f"<p><strong>Respuesta:</strong> los desertores tienen en promedio "
+           f"{p4.loc['desertor', 'materias_reprobadas']:.2f} materias reprobadas "
+           f"({p4.loc['desertor', 'estudiantes']} estudiantes) y los activos "
+           f"{p4.loc['activo', 'materias_reprobadas']:.2f} ({p4.loc['activo', 'estudiantes']} estudiantes). "
+           f"Se excluyen los graduados porque no pertenecen a ninguno de los dos grupos.</p>")
+
+    # --- Pregunta 5: deserción por cuartil de asistencia ---
+    p5 = df.groupby("cuartil_asistencia", observed=True).agg(
+        tasa=("desertor", "mean"),
+        asistencia_promedio=("asistencia_pct", "mean"),
+        estudiantes=("desertor", "count"))
+    bloque("Pregunta 5: ¿La deserción aumenta conforme baja la asistencia?",
+           p5.round(3).to_html() +
+           f"<p><strong>Respuesta:</strong> sí. La tasa pasa de {p5['tasa'].iloc[-1]:.1%} en el cuartil "
+           f"de asistencia más alta a {p5['tasa'].iloc[0]:.1%} en el más bajo. Es una asociación: "
+           f"la baja asistencia puede ser una señal de alerta, no necesariamente la causa.</p>")
 
 #---------------------------------------------------------------
-#ONCE
+#ONCE - listo
 #---------------------------------------------------------------
 
 def guardar(df):
