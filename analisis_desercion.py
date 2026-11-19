@@ -371,6 +371,52 @@ def tratar_imposibles(df):
     - Si el estudiante no trabaja, ¿cuántas horas de trabajo tiene? ¿Cómo lo aplicas en código?
     """
     # TODO 8: tratar edad, promedio_acumulado y horas_trabajo_semana, con sus justificaciones.
+    seccion("8. Tratar valores imposibles")
+
+    columnas = ["edad", "promedio_acumulado", "horas_trabajo_semana"]
+    antes = df[columnas].describe().round(2)
+
+    # --- edad: fuera de 15 a 60 -> mediana de las edades válidas ---
+    edad_mal = (df["edad"] < 15) | (df["edad"] > 60)
+    mediana_edad = df.loc[~edad_mal, "edad"].median()
+    df.loc[edad_mal, "edad"] = mediana_edad
+    registrar("tratar_imposibles", "edad", f"edad fuera de 15-60 a la mediana ({mediana_edad:.0f})",
+              edad_mal.sum(),
+              "Una edad de 12 o 150 años es un error de digitación. La mediana representa al "
+              "estudiante típico y, a diferencia del promedio, no la arrastran los valores extremos.")
+
+    # --- promedio_acumulado: mayor a 5 -> eliminar la fila ---
+    prom_mal = df["promedio_acumulado"] > 5
+    df = df[~prom_mal].reset_index(drop=True)
+    registrar("tratar_imposibles", "promedio_acumulado", "eliminar filas con promedio > 5",
+              prom_mal.sum(),
+              "La escala es de 0 a 5. No sabemos si 45 es 4.5 (escala de 50) o 2.25 (escala de 100); "
+              "adivinar la escala sería inventar la nota, igual que en el paso 7.")
+
+    # --- horas_trabajo_semana ---
+    # Regla 1: si no trabaja, sus horas son 0
+    no_trabaja_sin_horas = (df["trabaja"] == "no") & df["horas_trabajo_semana"].isnull()
+    df.loc[no_trabaja_sin_horas, "horas_trabajo_semana"] = 0
+    registrar("tratar_imposibles", "horas_trabajo_semana", "nulo a 0 si no trabaja",
+              no_trabaja_sin_horas.sum(),
+              "Si el estudiante no trabaja, sus horas de trabajo son 0: el dato no falta, se deduce.")
+
+    # Regla 2: más de 100 horas -> mediana de quienes trabajan
+    horas_mal = df["horas_trabajo_semana"] > 100
+    df.loc[horas_mal, "horas_trabajo_semana"] = np.nan
+    trabaja = df["trabaja"] == "sí"
+    mediana_horas = df.loc[trabaja, "horas_trabajo_semana"].median()
+    df.loc[horas_mal, "horas_trabajo_semana"] = mediana_horas
+    registrar("tratar_imposibles", "horas_trabajo_semana",
+              f"más de 100 horas a la mediana de quienes trabajan ({mediana_horas:.0f})", horas_mal.sum(),
+              "200 horas no caben en una semana de estudio. Se usa la mediana solo de quienes "
+              "trabajan, porque incluir a los que tienen 0 horas la bajaría artificialmente.")
+
+    # --- Reporte: antes y después ---
+    bloque("Estadísticas antes", antes.to_html())
+    bloque("Estadísticas después", df[columnas].describe().round(2).to_html())
+    bloque("Filas que quedan", f"<p>{len(df)} estudiantes</p>")
+
     return df
 
 #---------------------------------------------------------------
